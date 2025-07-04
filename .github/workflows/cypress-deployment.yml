@@ -19,16 +19,14 @@ jobs:
         with:
           fetch-depth: 2
 
-      - name: Create draft PR
+      - name: Create Pull Request
         id: cpr
         uses: peter-evans/create-pull-request@v7
-        with:
-          token: ${{ secrets.GH_AUTOMATION_PAT }}
-          title: "Cypress → test.subscription"
-          body: "Draft until Cypress test completes"
-          base: newbranch
-          branch: auto/cypress-pr
-          draft: true
+      - name: Check outputs
+        if: ${{ steps.cpr.outputs.pull-request-number }}
+        run: |
+          echo "Pull Request Number - ${{ steps.cpr.outputs.pull-request-number }}"
+          echo "Pull Request URL - ${{ steps.cpr.outputs.pull-request-url }}"
 
       - name: Show PR info
         run: |
