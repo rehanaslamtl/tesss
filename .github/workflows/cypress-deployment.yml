@@ -1,4 +1,4 @@
-name: PR Test Deployment
+name: PR via devops‑infra
 
 on:
   push:
@@ -10,27 +10,28 @@ permissions:
   pull-requests: write
 
 jobs:
-  build-and-deploy:
+  pr:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 2
+          fetch-depth: 0
 
-      - name: Create draft PR
-        id: cpr
-        uses: peter-evans/create-pull-request@v7
+      - name: Create Pull Request
+        id: pr
+        uses: devops-infra/action-pull-request@v0.6.0
         with:
-          token: ${{ secrets.GH_AUTOMATION_PAT }}
-          title: "Cypress → test.subscription"
-          body: "Draft until Cypress test completes"
-          base: newbranch
-          branch: auto/cypress-pr
+          github_token: ${{ secrets.GH_AUTOMATION_PAT }}
+          source_branch: main
+          target_branch: newbranch
+          title: 'Automated PR from main → newbranch'
+          body: 'This PR was created by devops‑infra/action-pull-request in draft.'
           draft: true
+          allow_no_diff: false
 
-      - name: Show PR info
+      - name: Show PR outputs
         run: |
-          echo "📦 PR number: ${{ steps.cpr.outputs.pull-request-number }}"
-          echo "📦 PR URL:   ${{ steps.cpr.outputs.pull-request-url }}"
+          echo "📦 PR number: ${{ steps.pr.outputs.pr_number }}"
+          echo "📦 PR URL:    ${{ steps.pr.outputs.url }}"
