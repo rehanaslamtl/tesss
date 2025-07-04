@@ -19,13 +19,6 @@ jobs:
         with:
           fetch-depth: 0
 
-      # 🤖 Optional: make or modify files before creating PR
-      - name: Create a dummy change
-        run: |
-          echo "// timestamp: $(date +%s)" >> dummy.txt
-          git add dummy.txt
-          git commit -m "chore: update dummy.txt"
-
       - name: Create Pull Request
         id: pr
         uses: devops-infra/action-pull-request@v0.6.0
