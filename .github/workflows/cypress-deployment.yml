@@ -1,0 +1,36 @@
+name: PR Test Deployment
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Create draft PR
+        id: cpr
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ secrets.GH_AUTOMATION_PAT }}
+          title: "Cypress → test.subscription"
+          body: "Draft until Cypress test completes"
+          base: newbranch
+          branch: auto/cypress-pr
+          draft: true
+
+      - name: Show PR info
+        run: |
+          echo "📦 PR number: ${{ steps.cpr.outputs.pull-request-number }}"
+          echo "📦 PR URL:   ${{ steps.cpr.outputs.pull-request-url }}"
