@@ -23,7 +23,7 @@ jobs:
         id: pr
         uses: devops-infra/action-pull-request@v0.6.0
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ secrets.GH_AUTOMATION_PAT }}
           source_branch: main
           target_branch: newbranch
           title: 'Automated PR from main → newbranch'
